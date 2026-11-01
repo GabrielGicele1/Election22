@@ -122,16 +122,56 @@ print("Total candidates:", candidate_id)
 
 # TEST: Prevent duplicate voting
 
-voter = w3.eth.accounts[1]
+#voter = w3.eth.accounts[1]
+
+#try:
+ #   tx_hash = contract.functions.vote(1).transact({
+  #      "from": voter
+   # })
+
+   # receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+    # print("Transaction status:", receipt.status)
+
+#except Exception as error:
+ #   print("Duplicate vote rejected!")
+  #  print("Error:", error)
+
+  # TEST: Vote using a different account
+
+# voter2 = w3.eth.accounts[2]
+
+# tx_hash = contract.functions.vote(1).transact({
+#     "from": voter2
+# })
+
+# receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+
+# print("Second vote transaction status:", receipt.status)
+
+# TEST: End voting
+
+# admin = w3.eth.accounts[0]
+
+# tx_hash = contract.functions.endVoting().transact({
+#    "from": admin
+# })
+
+# receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+
+# print("End voting transaction status:", receipt.status)
+
+# TEST: Prevent voting after election is closed
+
+voter3 = w3.eth.accounts[3]
 
 try:
-    tx_hash = contract.functions.vote(1).transact({
-        "from": voter
+    tx_hash = contract.functions.vote(0).transact({
+        "from": voter3
     })
 
     receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
     print("Transaction status:", receipt.status)
 
 except Exception as error:
-    print("Duplicate vote rejected!")
+    print("Vote rejected: Election is closed!")
     print("Error:", error)
