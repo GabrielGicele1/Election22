@@ -162,16 +162,114 @@ print("Total candidates:", candidate_id)
 
 # TEST: Prevent voting after election is closed
 
-voter3 = w3.eth.accounts[3]
+#voter3 = w3.eth.accounts[3]
 
-try:
-    tx_hash = contract.functions.vote(0).transact({
-        "from": voter3
-    })
+#try:
+ #   tx_hash = contract.functions.vote(0).transact({
+  #      "from": voter3
+   # })
 
-    receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
-    print("Transaction status:", receipt.status)
+    #receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+    #print("Transaction status:", receipt.status)
 
-except Exception as error:
-    print("Vote rejected: Election is closed!")
-    print("Error:", error)
+#except Exception as error:
+ #   print("Vote rejected: Election is closed!")
+  #  print("Error:", error)
+
+  # MAIN MENU
+
+
+
+# ==========================================
+# MAIN MENU
+# ==========================================
+
+while True:
+    print("\n===== BLOCKCHAIN VOTING SYSTEM =====")
+    print("1 - Display candidates")
+    print("2 - Check voting status")
+    print("3 - Cast a vote")
+    print("4 - Display election results")
+    print("0 - Exit")
+
+    choice = input("\nChoose an option: ")
+
+    if choice == "0":
+        print("Exiting Voting System...")
+        break
+
+    elif choice == "1":
+        print("\n===== REGISTERED CANDIDATES =====")
+
+        candidate_id = 0
+
+        while True:
+            try:
+                candidate = contract.functions.candidates(candidate_id).call()
+
+                print("ID:", candidate[0])
+                print("Name:", candidate[1])
+                print("Votes:", candidate[2])
+                print("--------------------")
+
+                candidate_id += 1
+
+            except Exception:
+                break
+
+        print("Total candidates:", candidate_id)
+
+    elif choice == "2":
+        voting_status = contract.functions.votingOpen().call()
+
+        print("\n===== VOTING STATUS =====")
+
+        if voting_status:
+            print("Voting is OPEN")
+        else:
+            print("Voting is CLOSED")
+
+    elif choice == "3":
+        print("\n===== CAST A VOTE =====")
+
+        voting_status = contract.functions.votingOpen().call()
+
+        if not voting_status:
+            print("Voting is CLOSED. You cannot vote.")
+
+        else:
+            print("Voting is OPEN.")
+
+            candidate_id = input("Enter candidate ID: ")
+
+            if not candidate_id.isdigit():
+                print("Invalid candidate ID.")
+
+            else:
+                candidate_id = int(candidate_id)
+
+                voter = w3.eth.accounts[3]
+
+                try:
+                    tx_hash = contract.functions.vote(
+                        candidate_id
+                    ).transact({"from": voter})
+
+                    receipt = w3.eth.wait_for_transaction_receipt(
+                        tx_hash
+                    )
+
+                    if receipt.status == 1:
+                        print("Vote registered successfully!")
+                    else:
+                        print("Vote transaction failed.")
+
+                except Exception as error:
+                    print("Vote rejected!")
+                    print("Error:", error)
+
+    elif choice == "4":
+        print("Displaying election results...")
+
+    else:
+        print("Invalid option. Please try again.")
