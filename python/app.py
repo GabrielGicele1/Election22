@@ -97,23 +97,17 @@ while True:
     elif choice == "1":
         print("\n===== REGISTERED CANDIDATES =====")
 
-        candidate_id = 0
+        candidate_count = contract.functions.getCandidateCount().call()
 
-        while True:
-            try:
-                candidate = contract.functions.candidates(candidate_id).call()
+        for candidate_id in range(candidate_count):
+            candidate = contract.functions.candidates(candidate_id).call()
 
-                print("ID:", candidate[0])
-                print("Name:", candidate[1])
-                print("Votes:", candidate[2])
-                print("--------------------")
+            print("ID:", candidate[0])
+            print("Name:", candidate[1])
+            print("Votes:", candidate[2])
+            print("--------------------")
 
-                candidate_id += 1
-
-            except Exception:
-                break
-
-        print("Total candidates:", candidate_id)
+        print("Total candidates:", candidate_count)
 
     elif choice == "2":
         voting_status = contract.functions.votingOpen().call()
@@ -144,28 +138,54 @@ while True:
             else:
                 candidate_id = int(candidate_id)
 
-                voter = w3.eth.accounts[3]
+                candidate_count = contract.functions.getCandidateCount().call()
 
-                try:
-                    tx_hash = contract.functions.vote(
-                        candidate_id
-                    ).transact({"from": voter})
+                if candidate_id >= candidate_count:
+                    print("Invalid candidate ID.")
 
-                    receipt = w3.eth.wait_for_transaction_receipt(
-                        tx_hash
-                    )
+                else:
+                    voter = w3.eth.accounts[3]
 
-                    if receipt.status == 1:
-                        print("Vote registered successfully!")
-                    else:
-                        print("Vote transaction failed.")
+                    try:
+                        if contract.functions.hasVoted(voter).call():
+                            print("This account has already voted.")
 
-                except Exception as error:
-                    print("Vote rejected!")
-                    print("Error:", error)
+                        else:
+                            tx_hash = contract.functions.vote(
+                                candidate_id
+                            ).transact({"from": voter})
+
+                            receipt = w3.eth.wait_for_transaction_receipt(
+                                tx_hash
+                            )
+
+                            if receipt.status == 1:
+                                print("Vote registered successfully!")
+                            else:
+                                print("Vote transaction failed.")
+
+                    except Exception as error:
+                        print("Vote rejected!")
+                        print("Error:", error)
 
     elif choice == "4":
-        print("Displaying election results...")
+        print("\n===== ELECTION RESULTS =====")
+
+        total_votes = 0
+
+        candidate_count = contract.functions.getCandidateCount().call()
+
+        for candidate_id in range(candidate_count):
+            candidate = contract.functions.candidates(candidate_id).call()
+
+            print("ID:", candidate[0])
+            print("Candidate:", candidate[1])
+            print("Votes:", candidate[2])
+            print("--------------------")
+
+            total_votes += candidate[2]
+
+        print("Total votes:", total_votes)
 
     else:
         print("Invalid option. Please try again.")
