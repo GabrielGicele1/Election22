@@ -60,6 +60,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "getCandidateCount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "address",
@@ -153,11 +166,11 @@
 	},
 	"sources": {
 		"voting.sol": {
-			"keccak256": "0x64aa8822557df614f54c3804c8965f17b3ef09c54c14ce7240df7356545e28d0",
+			"keccak256": "0x88955e55d6294fa0a6afd42efdd5f39d2217ccc3376a063eedeea511887783b1",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6b2b7b125825c4ce5db6dded0ce8d702982ff559c9896ddbd80d8c2344581f34",
-				"dweb:/ipfs/QmUPjqSqMGjcsk3UE6FRMx9excVYacLmNiUzP328vnFhuz"
+				"bzz-raw://b420b2d0a10e5c5bdccfd8e592dac9969548bc2d5849df5a7c695a98ac4233cc",
+				"dweb:/ipfs/QmS9cR6KRqRLNUs6GdqSBxNQKWqv7KvuQzWD2rt1hmrw5e"
 			]
 		}
 	},
