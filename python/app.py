@@ -230,5 +230,39 @@ while True:
 
         print("Total votes:", total_votes)
 
-  
+    elif choice == "6":
+        print("\n===== VOTING STATUS =====")
+
+        voting_status = contract.functions.votingOpen().call()
+
+        if voting_status:
+            print("Voting is OPEN")
+        else:
+            print("Voting is CLOSED")
+
+    elif choice == "7":
+        print("\n===== END VOTING =====")
+
+        if not contract.functions.votingOpen().call():
+            print("Voting is already CLOSED.")
+        else:
+            try:
+                tx_hash = contract.functions.endVoting().transact(
+                    {"from": owner}
+                )
+                receipt = w3.eth.wait_for_transaction_receipt(tx_hash)
+
+                if receipt.status == 1:
+                    print("Voting ended successfully!")
+                else:
+                    print("Failed to end voting.")
+
+                show_transaction(receipt)
+
+            except Exception as error:
+                print("Failed to end voting!")
+                print("Error:", error)
+
+    else:
+        print("Invalid option. Please try again.")
 
